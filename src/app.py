@@ -13,7 +13,7 @@ from flask import Response
 
 app = Flask(__name__)
 DIRPATH = tempfile.mkdtemp()
-EXTENSION = "png"
+EXTENSION = ".png"
 CWD = os.path.abspath(os.getcwd())
 STORAGE = os.path.join(CWD, "storage")
 SIZE = 1000
