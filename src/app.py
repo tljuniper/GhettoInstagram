@@ -6,9 +6,7 @@ import os
 import tempfile
 from datetime import datetime
 import uuid
-from flask import Flask
-from flask import request, url_for
-from flask import Response
+from flask import Flask, Response, redirect, request, url_for
 from os.path import join, basename
 from os import listdir
 
@@ -119,9 +117,28 @@ def feed():
     return html
 
 
-@app.route("/")
-def index():
-    return "This is Vinstagram"
+@app.route("/", methods=["GET"])
+def indexGet():
+    return """
+    <!doctype html>
+    <title>Vinstagram</title>
+    <h1>This is Vinstagram!</h1>
+    <h2>Who are you?</h2>
+    <form method=post enctype=multipart/form-data>
+      <label for="username">Enter Name</label>
+      <input type=text name=username>
+      <input type=submit value=Submit>
+    </form>
+    """
+
+
+@app.route("/", methods=["POST"])
+def indexPost():
+    username = request.form["username"]
+    if username != "":
+        return redirect(url_for(image_upload(username)))
+    else:
+        return Response(status=400)
 
 
 def run():
