@@ -2,9 +2,6 @@
 
 # to execute run `FLASK_APP=main.py FLASK_ENV=DEBUG flask run`
 from PIL import Image
-import src.image_processing
-import src.storage
-from  src.storage import STORAGE
 import os
 import tempfile
 from datetime import datetime
@@ -15,12 +12,12 @@ from flask import Response
 from os.path import join, basename
 from os import listdir
 
-app = Flask(__name__, static_url_path="/static", static_folder=STORAGE)
-DIRPATH = tempfile.mkdtemp()
-EXTENSION = ".png"
 CWD = os.path.abspath(os.getcwd())
 STORAGE = os.path.join(CWD, "storage")
 SIZE = 1000
+app = Flask(__name__, static_url_path="/static", static_folder=STORAGE)
+DIRPATH = tempfile.mkdtemp()
+EXTENSION = ".png"
 
 
 def generateUniquePath(pathname, extension):
