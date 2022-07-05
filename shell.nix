@@ -5,6 +5,7 @@ let
     numpy
     jupyter
     flask
+    pillow
   ]);
 
 in pkgs.mkShell {
