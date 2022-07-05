@@ -22,9 +22,14 @@ def feed():
     return Response(status=200)
 
 
-def main():
-    print("hello world")
+@app.route("/")
+def index():
+    return "This is Vinstagram"
+
+
+def run():
+    app.run(host="0.0.0.0")
 
 
 if __name__ == "__main__":
-    main()
+    run()

@@ -9,7 +9,7 @@ setup(
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "main = src.main:main"
+            "run = src.app:run",
         ]
     },
     extras_require={"dev": ["mypy", "black"]},
