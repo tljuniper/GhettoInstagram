@@ -17,8 +17,8 @@ in {
       type = types.str;
       description = ''
         This is the path to store images in.
-      ''
-    }
+      '';
+    };
   };
 
   config = (mkIf cfg.enable {
