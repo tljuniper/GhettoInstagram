@@ -4,7 +4,7 @@ python3Packages.buildPythonApplication rec {
   name = "ghetto_instagram";
   version = "1.0";
   src = ./.;
-  propagatedBuildInputs = with python3Packages; [ flask setuptools ];
+  propagatedBuildInputs = with python3Packages; [ flask pillow setuptools ];
 
   doCheck = true;
   checkInputs = with python3Packages; [ black ];
