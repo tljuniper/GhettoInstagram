@@ -9,5 +9,5 @@ let
   ]);
 
 in pkgs.mkShell {
-  buildInputs = [ pythonEnv ];
+  buildInputs = [ pythonEnv black ];
 }

@@ -105,15 +105,17 @@ def image_upload(username):
 @app.route("/feed", methods=["GET"])
 def feed():
 
-    folders = request.args.get('users').split(',')
+    folders = request.args.get("users").split(",")
     allImages = []
     for folder in folders:
-        allImages += map(lambda image: join(folder,image), listdir(join(STORAGE,folder)))
+        allImages += map(
+            lambda image: join(folder, image), listdir(join(STORAGE, folder))
+        )
 
-    allImagesSorted = sorted(allImages, key=lambda path: basename(path))
-    urls = map(lambda im: url_for('static', filename=im), allImagesSorted)
+    allImagesSorted = sorted(allImages, key=lambda path: basename(path), reverse=True)
+    urls = map(lambda im: url_for("static", filename=im), allImagesSorted)
     htmlList = map(lambda url: f'<img src="{url}" alt="feed image">', urls)
-    html = '-'.join(htmlList)
+    html = "-".join(htmlList)
     return html
 
 
