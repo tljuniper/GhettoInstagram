@@ -2,15 +2,20 @@
 
 # to execute run `FLASK_APP=main.py FLASK_ENV=DEBUG flask run`
 from PIL import Image
+import src.image_processing
+import src.storage
+from  src.storage import STORAGE
 import os
 import tempfile
 from datetime import datetime
 import uuid
 from flask import Flask
-from flask import request
+from flask import request, url_for
 from flask import Response
+from os.path import join, basename
+from os import listdir
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="/static", static_folder=STORAGE)
 DIRPATH = tempfile.mkdtemp()
 EXTENSION = ".png"
 CWD = os.path.abspath(os.getcwd())
@@ -102,8 +107,17 @@ def image_upload(username):
 
 @app.route("/feed", methods=["GET"])
 def feed():
-    user = request.args.get("users")
-    return Response(status=200)
+
+    folders = request.args.get('users').split(',')
+    allImages = []
+    for folder in folders:
+        allImages += map(lambda image: join(folder,image), listdir(join(STORAGE,folder)))
+
+    allImagesSorted = sorted(allImages, key=lambda path: basename(path))
+    urls = map(lambda im: url_for('static', filename=im), allImagesSorted)
+    htmlList = map(lambda url: f'<img src="{url}" alt="feed image">', urls)
+    html = '-'.join(htmlList)
+    return html
 
 
 @app.route("/")
