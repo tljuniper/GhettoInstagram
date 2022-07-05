@@ -1,19 +1,32 @@
 #!/usr/bin/env python3
 
 # to execute run `FLASK_APP=main.py FLASK_ENV=DEBUG flask run`
-
+import image_processing
+import storage
+import os
+import tempfile
 from flask import Flask
 from flask import request
 from flask import Response
 
 app = Flask(__name__)
+DIRPATH = tempfile.mkdtemp()
+EXTENSION = "png"
 
 
 @app.route("/users/<username>/photos", methods=["POST"])
 def image_upload(username):
     print(username)
-    data = request.form
-    return Response(status=200)
+    f = request.files["file"]
+    print(f.filename)
+    if f.filename != "":
+        tmpFilename = os.path.join(DIRPATH, f.filename)
+        f.save(tmpFilename)
+        storagePath = storage.getPath(username, EXTENSION)
+        image_processing.png_convert(tmpFilename, storagePath)
+        return Response(status=200)
+    else:
+        return Response(status=400)
 
 
 @app.route("/feed", methods=["GET"])
