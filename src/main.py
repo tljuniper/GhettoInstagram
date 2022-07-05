@@ -8,7 +8,7 @@ from flask import Response
 app = Flask(__name__)
 
 
-@app.route('/users/<username>/photos',methods = ['PUT'])
+@app.route('/users/<username>/photos',methods = ['POST'])
 def image_upload(username):
   print(username)
   data = request.form
