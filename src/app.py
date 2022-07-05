@@ -75,21 +75,6 @@ def png_convert(inPath, outPath):
         im.save(outPath)
 
 
-def test_helper(name):
-    png_convert(f"test/img/{name}.png", f"test/out/{name}.png")
-
-
-def main():
-    test_helper("small_x_small_y")
-    test_helper("small_x_large_y")
-    test_helper("large_x_small_y")
-    test_helper("large_x_large_y")
-
-
-if __name__ == "__main__":
-    main()
-
-
 @app.route("/users/<username>/photos", methods=["POST"])
 def image_upload(username):
     print(username)
