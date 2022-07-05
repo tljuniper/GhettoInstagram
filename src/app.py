@@ -21,7 +21,7 @@ EXTENSION = ".png"
 
 
 def generateUniquePath(pathname, extension):
-    uniqueFilepath = pathname + str(uuid.uuid4()) + extension
+    uniqueFilepath = pathname + "-" + str(uuid.uuid4()) + extension
     if os.path.exists(uniqueFilepath):
         return generateUniquePath(pathname, extension)
     return uniqueFilepath
@@ -35,7 +35,7 @@ def getPath(user, extension):
         os.makedirs(userPath)
 
     dateTimeObj = datetime.now()
-    timestampStr = dateTimeObj.strftime("%Y-%m-%d_%H-%M-%S")
+    timestampStr = dateTimeObj.strftime("%Y-%m-%d_%H-%M-%S-%f")
 
     photoPath = os.path.join(userPath, timestampStr)
 
