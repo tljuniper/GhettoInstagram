@@ -1,6 +1,5 @@
 { system ? builtins.currentSystem }:
 let
-  nixpkgs = import <nixpkgs> { };
   pkgs = import <nixpkgs> {
     config = { allowUnfree = true; };
     overlays = [ (import ./overlay.nix) ];
