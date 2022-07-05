@@ -1,13 +1,13 @@
-with import <nixpkgs> {};
+{ buildPythonApplication, setuptools, flask, pillow, black }:
 
-python3Packages.buildPythonApplication rec {
+buildPythonApplication rec {
   name = "ghetto_instagram";
   version = "1.0";
   src = ./.;
-  propagatedBuildInputs = with python3Packages; [ flask pillow setuptools ];
+  propagatedBuildInputs = [ flask pillow setuptools ];
 
   doCheck = true;
-  checkInputs = with python3Packages; [ black ];
+  checkInputs = [ black ];
   preCheck = ''
     black --check --diff ./**/*.py
   '';

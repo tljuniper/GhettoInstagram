@@ -16,6 +16,9 @@ in {
   };
 
   config = (mkIf cfg.enable {
+      nixpkgs.overlays = [
+	(import ./overlay.nix)
+      ];
       users.extraGroups.vinstagram = { };
       users.extraUsers.vinstagram= {
         isSystemUser = true;
@@ -32,10 +35,11 @@ in {
 
         serviceConfig.Restart = "always";
         serviceConfig.User = "vinstagram";
+	path = with pkgs; [ python3Packages.flask python3Packages.pillow ];
 
         script = ''
-          FLASK_APP=app.py FLASK_ENV=DEBUG flask run
+          exec ${pkgs.vinstagram}/bin/run
         '';
       };
-    })
+    });
 }
