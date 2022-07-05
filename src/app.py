@@ -12,8 +12,7 @@ from flask import Response
 from os.path import join, basename
 from os import listdir
 
-CWD = os.path.abspath(os.getcwd())
-STORAGE = os.path.join(CWD, "storage")
+STORAGE = os.getenv("STORAGE_DIR")
 SIZE = 1000
 app = Flask(__name__, static_url_path="/static", static_folder=STORAGE)
 DIRPATH = tempfile.mkdtemp()
