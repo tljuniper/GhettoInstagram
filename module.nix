@@ -3,20 +3,19 @@
 with lib;
 
 let
-  cfg = config.services.app;
+  cfg = config.services.vinstagram;
 in {
-  options.services.app = {
+  options.services.vinstagram = {
     enable = mkOption {
       type = types.bool;
       default = false;
       description = ''
         If enabled, it runs.
       '';
-    }
+    };
   };
 
-  config = lib.optionalAttrs cfg.enable {};
-  (mkIf ctrlCfg.enable {
+  config = (mkIf cfg.enable {
       users.extraGroups.vinstagram = { };
       users.extraUsers.vinstagram= {
         isSystemUser = true;
