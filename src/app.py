@@ -14,19 +14,30 @@ DIRPATH = tempfile.mkdtemp()
 EXTENSION = "png"
 
 
-@app.route("/users/<username>/photos", methods=["POST"])
+@app.route("/users/<username>/photos", methods=["GET", "POST"])
 def image_upload(username):
-    print(username)
-    f = request.files["file"]
-    print(f.filename)
-    if f.filename != "":
-        tmpFilename = os.path.join(DIRPATH, f.filename)
-        f.save(tmpFilename)
-        storagePath = storage.getPath(username, EXTENSION)
-        image_processing.png_convert(tmpFilename, storagePath)
-        return Response(status=200)
-    else:
-        return Response(status=400)
+    if request.method == "POST":
+        print(username)
+        f = request.files["file"]
+        print(f.filename)
+        if f.filename != "":
+            tmpFilename = os.path.join(DIRPATH, f.filename)
+            f.save(tmpFilename)
+            storagePath = storage.getPath(username, EXTENSION)
+            image_processing.png_convert(tmpFilename, storagePath)
+            return Response(status=200)
+        else:
+            return Response(status=400)
+    return f"""
+    <!doctype html>
+    <title>{username}: Upload new Photo</title>
+    <h1>Hi {username}!</h1>
+    <h2>Upload new Photo:</h2>
+    <form method=post enctype=multipart/form-data>
+      <input type=file name=file>
+      <input type=submit value=Upload>
+    </form>
+    """
 
 
 @app.route("/feed", methods=["GET"])
