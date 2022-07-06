@@ -74,30 +74,45 @@ def png_convert(inPath, outPath):
         im.save(outPath)
 
 
+def simpleHtml(body):
+    return f"""
+    <!doctype html>
+    <title>Vinstagram</title>
+    <h1>This is Vinstagram!</h1>
+    {body}
+    """
+
+
+def simpleHtmlResponse(paragraph, statusCode):
+    return Response(simpleHtml(f"<p>{paragraph}</p>"), status=statusCode)
+
+
 @app.route("/users/<username>/photos", methods=["GET", "POST"])
 def image_upload(username):
     if request.method == "POST":
         print(username)
         f = request.files["file"]
         print(f.filename)
-        if f.filename != "":
+        if f.filename != "" and f.filename.endswith(EXTENSION):
             tmpFilename = os.path.join(DIRPATH, f.filename)
             f.save(tmpFilename)
             storagePath = getPath(username, EXTENSION)
             png_convert(tmpFilename, storagePath)
-            return Response(status=200)
+            return simpleHtmlResponse("Thank you for the upload!", 200)
         else:
-            return Response(status=400)
-    return f"""
-    <!doctype html>
-    <title>{username}: Upload new Photo</title>
-    <h1>Hi {username}!</h1>
-    <h2>Upload new Photo:</h2>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    """
+            return simpleHtmlResponse(
+                f"You need to choose a photo of type '{EXTENSION}' to upload!", 400
+            )
+    return simpleHtml(
+        f"""
+        <h2>Hi {username}!</h2>
+        <h3>Upload new Photo:</h3>
+        <form method=post enctype=multipart/form-data>
+          <input type=file name=file>
+          <input type=submit value=Upload>
+        </form>
+        """
+    )
 
 
 @app.route("/feed", methods=["GET"])
@@ -106,9 +121,12 @@ def feed():
     folders = request.args.get("users").split(",")
     allImages = []
     for folder in folders:
-        allImages += map(
-            lambda image: join(folder, image), listdir(join(STORAGE, folder))
-        )
+        userPath = join(STORAGE, folder)
+        userExists = os.path.exists(userPath)
+        if not userExists:
+            return simpleHtmlResponse(f"The user '{folder}' does not exist!", 400)
+
+        allImages += map(lambda image: join(folder, image), listdir(userPath))
 
     allImagesSorted = sorted(allImages, key=lambda path: basename(path), reverse=True)
     urls = map(lambda im: url_for("static", filename=im), allImagesSorted)
@@ -124,18 +142,17 @@ def index():
         if name != "":
             return redirect(url_for("image_upload", username=name))
         else:
-            return Response(status=400)
-    return """
-    <!doctype html>
-    <title>Vinstagram</title>
-    <h1>This is Vinstagram!</h1>
-    <h2>Who are you?</h2>
-    <form method=post enctype=multipart/form-data>
-      <label for="username">Enter Name</label>
-      <input type=text name=username>
-      <input type=submit value=Submit>
-    </form>
-    """
+            return simpleHtmlResponse("You need to enter a non-empty name!", 400)
+    return simpleHtml(
+        """
+        <h2>Who are you?</h2>
+        <form method=post enctype=multipart/form-data>
+          <label for="username">Enter Name</label>
+          <input type=text name=username>
+          <input type=submit value=Submit>
+        </form>
+        """
+    )
 
 
 def run():
