@@ -1,16 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="ghetto_instagram",
+    name="vinstagram",
     version="1.0",
     author="",
     url="",
-    description="Ghetto Instagram",
+    description="Vinstagram - vintage instagram",
     packages=find_packages(),
-    entry_points={
-        "console_scripts": [
-            "run = src.app:run",
-        ]
-    },
+    entry_points={"console_scripts": ["vinstagram = src.app:run"]},
     extras_require={"dev": ["mypy", "black"]},
 )

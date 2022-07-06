@@ -45,7 +45,7 @@ in {
 
       script = ''
         export STORAGE_DIR=${cfg.storageDir}
-        exec ${pkgs.vinstagram}/bin/run
+        exec ${pkgs.vinstagram}/bin/vinstagram
       '';
     };
   });

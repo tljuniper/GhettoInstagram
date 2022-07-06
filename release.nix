@@ -9,11 +9,9 @@ in rec {
   inherit (pkgs) vinstagram;
 
   dev-shell = pkgs.mkShell {
-    buildInputs =
-      with pkgs; [
+    inputsFrom = with pkgs; [
+        vinstagram
         python3Packages.black
-        python3Packages.flask
-        python3Packages.pillow
       ];
     };
 }
