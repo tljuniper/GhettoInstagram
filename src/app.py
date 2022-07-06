@@ -10,7 +10,8 @@ from flask import Flask, Response, redirect, request, url_for
 from os.path import join, basename
 from os import listdir
 
-STORAGE = os.getenv("STORAGE_DIR")
+CWD = os.path.abspath(os.getcwd())
+STORAGE = os.path.join(CWD, "storage")
 SIZE = 1000
 app = Flask(__name__, static_url_path="/static", static_folder=STORAGE)
 DIRPATH = tempfile.mkdtemp()
@@ -116,8 +117,14 @@ def feed():
     return html
 
 
-@app.route("/", methods=["GET"])
-def indexGet():
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        name = request.form["username"]
+        if name != "":
+            return redirect(url_for("image_upload", username=name))
+        else:
+            return Response(status=400)
     return """
     <!doctype html>
     <title>Vinstagram</title>
@@ -129,15 +136,6 @@ def indexGet():
       <input type=submit value=Submit>
     </form>
     """
-
-
-@app.route("/", methods=["POST"])
-def indexPost():
-    username = request.form["username"]
-    if username != "":
-        return redirect(url_for(image_upload(username)))
-    else:
-        return Response(status=400)
 
 
 def run():
